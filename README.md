@@ -1,22 +1,20 @@
 # privateer
 web-framework with black beard and a pet parrot
 
-## stack
+## the rig
 
-- common
+- quarterdeck
   [coffee-script](http://coffeescript.org)
   , [lodash](http://lodash.com/docs)
   , [moment](http://momentjs.com/docs/)
-
-- front-end
+- weather deck
   [angular](https://docs.angularjs.org/api)
   , [angular-material](http://material.angularjs.org/latest)
   , [materialize](http://materializecss.com)
   , [jade/pug](http://jade-lang.com)
-
-- back-end
+- lower deck
   [express](http://expressjs.com/en/4x/api.html)
   , [nodejs](http://nodejs.org/dist/latest-v4.x/docs/api/)
   , [sequelize](http://sequelize.readthedocs.io/en/latest/images/logo.png)
-  , [postgresql](http://www.postgresql.org/docs/9.5/static/index.html)
-
+- cargo hold
+  [postgresql](http://www.postgresql.org/docs/9.5/static/index.html)
