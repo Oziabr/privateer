@@ -1,0 +1,53 @@
+extends layout
+
+block content
+  header
+    +navbar-unresponsive('Privateer', '/').lighten-1(class=colorOne)
+  main
+    #index-banner.section.no-pad-bot
+      .container
+        br
+        br
+        h1.header.center(class="#{colorTwo}-text") Ahoy, Mateys!
+
+    .container
+      .section
+        .row
+          .col.s12.l4
+            .icon-block
+              h2.center(class="#{colorOne}-text"): i.material-icons.large flash_on
+              h5.center Pilage and Plunder
+              p.light
+                | Looting, also referred to as sacking, ransacking, plundering, despoiling, despoliation,
+                | and pillaging, is the indiscriminate taking of goods by force as part of a military or
+                | political victory, or during a catastrophe, such as war,[1] natural disaster,[2] or
+                | rioting.[3] The term is also used in a broader sense to describe egregious instances
+                | of theft and embezzlement, such as the "plundering" of private or public assets by 
+                | governments.[4] Looting is loosely distinguished from scavenging in terms of objects
+                | taken: scavenging implies taking of essential items such as food, water, shelter, or
+                | other material needed for survival while looting implies items not necessary for survival
+                | such as luxury goods, art work, precious metals or other assorted items of value to the
+                | looters. The proceeds of all these activities can be described as loot, plunder, spoils, or pillage.
+          .col.s12.l4
+            .icon-block
+              h2.center(class="#{colorOne}-text"): i.material-icons.large attach_money
+              h5.center Ransom
+              p.light
+                | Ransom is the practice of holding a prisoner or item to extort money or property to secure
+                | their release, or it may refer to the sum of money involved. In an early German law, a similar
+                | concept was called weregild. When ransom means "payment", the word comes via Old French rançon
+                | from Latin redemptio = "buying back":[1] compare "redemption". In Judaism ransom is called
+                | kofer-nefesh (Hebrew: כפר נפש). Among other uses, the word was applied to the poll tax of a
+                | half shekel to be paid by every male above twenty years at the census.[2]
+          .col.s12.l4
+            .icon-block
+              h2.center(class="#{colorOne}-text"): i.material-icons.large shopping_cart
+              h5.center Booty
+              p.light
+                | Treasure (from Greek θησαυρός - thēsauros, meaning "treasure store",[2] romanized as thesaurus)
+                | is a concentration of riches, often those that originate from ancient history, considered lost
+                | and/or forgotten until being rediscovered. Some jurisdictions legally define what constitutes
+                | treasure, such as in the British Treasure Act 1996. The phrase "blood and treasure" or "lives
+                | and treasure" has been used to refer to the human and monetary costs associated with massive
+                | endeavours such as war that expend both.
+  +footer(true)

@@ -1,0 +1,39 @@
+mixin footer-copyright
+  .footer-copyright
+    style.
+      #references img,
+      #references path {height: 30px; margin-bottom: -0px;}
+      #references span {font-weight: 700; font-size: 40px;}
+    .container: .row
+      .col.s10#references
+        a.text-darken-2(class="#{colorOne}-text", href='https://lodash.com/docs'): span _
+        | 
+        a(href='http://momentjs.com/docs/')
+          svg(viewBox="0 0 40 40", height="30px", width="30px")
+            ellipse(fill="0", ry="18.5", rx="18.5", cy="20", cx="20", stroke-width="3", stroke="#fff")
+            path(fill="#b0d9d3", d="M20,36 C28.836556,36 36,28.836556 36,20 C36,11.163444 28.836556,4 20,4 C11.163444,4 4,11.163444 4,20 C4,28.836556 11.163444,36 20,36 Z M20,5 C19.4477153,5 19,5.44994876 19,6.00684547 L19,19 L11.9970301,19 C11.4463856,19 11,19.4438648 11,20 C11,20.5522847 11.4556644,21 11.9953976,21 L21,21 L21,6.00087166 C21,5.4481055 20.5561352,5 20,5 Z", fill-rule="evenodd")
+        | 
+        a(href='http://material.angularjs.org/latest')
+          img(src="http://material.angularjs.org/latest/img/icons/angular-logo.svg")
+        | 
+        a(href='http://materializecss.com')
+          img.madeof(src="http://materializecss.com/res/materialize.svg")
+        | 
+        a(href='http://jade-lang.com/')
+          img.madeof(src='https://cdn.rawgit.com/pugjs/pug-logo/master/SVG/pug-final-logo-_-colour-512.svg')
+        | 
+        a(href='http://coffeescript.org')
+          img.madeof(src='http://coffeescript.org/documentation/images/just_logo.svg')
+        | 
+        a.text-lighten-3(class="white-text", href='http://expressjs.com/en/4x/api.html'): span Ex
+        | 
+        a(href='https://nodejs.org/dist/latest-v4.x/docs/api/')
+          img.madeof(src='http://node-os.com/images/nodejs.png')
+        | 
+        a(href='http://sequelize.readthedocs.io/en/latest')
+          img.madeof(src='http://sequelize.readthedocs.io/en/latest/images/logo.png')
+        | 
+        a(href='https://www.postgresql.org/docs/9.5/static/index.html')
+          img.madeof(src='https://wiki.postgresql.org/images/a/a4/PostgreSQL_logo.3colors.svg')
+      .col.s2
+        div.right: a(href="https://github.com/Oziabr/privateer"): strong.white-text privateer©2016

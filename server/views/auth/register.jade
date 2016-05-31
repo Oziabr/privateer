@@ -1,0 +1,21 @@
+extends ../layout
+
+block content
+  style.
+    .btn:hover {background-color: #81d4fa;}
+  .container
+    br
+    br
+    form(action="", method="post"): .row: .col.s12.l4.offset-l4
+      .card
+        .card-content.center-align
+          //i.large.material-icons(class="#{colorOne}-text") account_circle
+          span.card-title: strong Register
+          input#email(type="text", name="email")
+          label(for='email') емайл
+
+          input#password(type="password", name="password")
+          label(for='password') пароль
+        .card-action
+          button.btn.right(class=colorOne, type="submit") Submit
+          a.btn.btn-flat(href='/') Cancel

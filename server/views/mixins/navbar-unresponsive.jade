@@ -1,0 +1,16 @@
+mixin navbar-unresponsive(title, href)
+  nav&attributes(attributes)(role='navigation')
+    .nav-wrapper.container
+      a#logo-container.brand-logo(href=href)= title
+      ul.right
+        block
+        if user && ~user.id
+          li: a.valign-wrapper.waves-effect.waves-light(href='/profile')
+            if user.userpic
+              img.responsive-img.valign.circle(style='width: 62px', src='/img/userpic/#{user.userpic}')
+            else
+              i.large.material-icons(class="white-text") account_circle
+          li: a.waves-effect.waves-light(href='/auth/logout') Log Out
+        else
+          li: a.waves-effect.waves-light(href='/auth/login') Log In
+          li: a.waves-effect.waves-light(href='/auth/register') Register

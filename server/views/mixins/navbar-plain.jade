@@ -1,0 +1,6 @@
+mixin navbar-plain(title, href)
+  nav&attributes(attributes)(role='navigation')
+    .nav-wrapper.container
+      a#logo-container.brand-logo(href=href)= title
+      ul.right
+        block

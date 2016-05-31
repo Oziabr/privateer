@@ -1,0 +1,33 @@
+extends ../layout
+
+block content
+  header
+    +navbar-unresponsive(user.username, '/').lighten-1(class=colorOne)
+  main
+    .container
+      .section: form(action='', method='POST', enctype="multipart/form-data")
+        .row
+          .col.s12.l6
+            +input('first_name', profile.first_name || "") First Name
+            +input('last_name',  profile.last_name || "") Last Name
+
+            .card-panel.grey.lighten-5.z-depth-1
+              .row.valign-wrapper
+                .col.s2
+                  if profile.userpic
+                    img.circle.responsive-img(src='/img/userpic/#{profile.userpic}')
+                  else
+                    img.circle.responsive-img(src='/images/pixel.png')
+                .col.s10
+                  .input-field.file-field
+                    .btn
+                      i.right.material-icons picture_in_picture
+                      span Avatar
+                      input(type="file", name="userpic")
+                    .file-path-wrapper
+                      input.file-path(type="text", placeholder='replace current avatar')
+
+        hr
+        +submit Send
+
+  +footer(true)

@@ -1,0 +1,5 @@
+mixin input(name, value, type)
+  .input-field
+    input(type=type || 'text', name=name, value=value, id=name)
+    label(for=name)
+      block

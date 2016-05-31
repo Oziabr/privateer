@@ -1,0 +1,24 @@
+include mixin
+- var colorOne = 'deep-orange'
+- var colorTwo = 'indigo'
+- var colorThree = 'green'
+- var colorFour = 'purple'
+doctype html
+html(ng-app="privateer")
+  head
+    meta(charset="utf-8")
+    title Privateer
+    link(rel='stylesheet', href='/vendor-4509377a66.css')
+    link(href="https://fonts.googleapis.com/icon?family=Material+Icons", rel="stylesheet")
+    script(type = "text/javascript", src="/js/vendor-afe20d4221.js")
+    script.
+      angular.module('privateer', [
+        'ngAnimate',
+        'ngSanitize',
+        'ngMessages',
+        'restangular',
+        'ui.router',
+        'ngMaterial',
+        'toastr'])
+  body
+    block content

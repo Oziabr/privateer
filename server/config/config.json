@@ -1,0 +1,35 @@
+{
+  "development": {
+    "db": {
+      "define": {
+        "freezeTableName": true,
+        "underscored": true
+      },
+      "username": "local",
+      "password": "local",
+      "database": "local",
+      "host": "127.0.0.1",
+      "dialect": "postgres",
+      "logging": false
+    }
+  },
+  "test": {
+    "db": {
+      "username": "local",
+      "password": "local",
+      "database": "local",
+      "host": "127.0.0.1",
+      "dialect": "postgres"
+    }
+  },
+  "production": {
+    "db": {
+      "username": "local",
+      "password": "local",
+      "database": "local",
+      "host": "127.0.0.1",
+      "dialect": "postgres",
+      "logging": false
+    }
+  }
+}
