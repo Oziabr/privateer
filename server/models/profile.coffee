@@ -7,5 +7,6 @@ module.exports = (sequelize, dt) ->
   }, classMethods:
     associate: (models) ->
       @.hasMany models.user
+      @.hasMany models.owned_item, foreignKey: 'owner_id'
       return
 
