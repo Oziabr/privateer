@@ -1,0 +1,17 @@
+extends layout
+
+block content
+  main
+
+    .container
+      br
+      br
+      .row: .col.s12.l8.offset-l2
+        .card.darken-3(class=colorOne)
+          .card-content.white-text
+            span.card-title Error #{error.type}
+            pre= error.message
+          .card-action
+            a(href='/') Go back
+            a(href='./') Again
+

@@ -1,5 +1,5 @@
 mixin navbar-plain(title, href)
-  nav&attributes(attributes)(role='navigation')
+  nav&attributes(attributes)(role='navigation', class=colorOne).lighten-1
     .nav-wrapper.container
       a#logo-container.brand-logo(href=href)= title
       ul.right
