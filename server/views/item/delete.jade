@@ -1,0 +1,18 @@
+extends ../layout
+
+block content
+  header
+    +navbar-unresponsive('Item', '/')
+  main
+    .container: form(action='', method='POST')
+      br
+
+      .row.center: +submit.btn-large Delete
+      .section
+        h2= item.title
+        p= item.field1
+        p= item.field2
+        hr
+        +button2('/item/'+item.id) Back
+        +button2('/item').right Back To List
+

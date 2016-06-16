@@ -1,0 +1,20 @@
+extends ../layout
+
+block content
+  header
+    +navbar-unresponsive('Item', '/')
+  main
+    .container
+      .section: form(action='', method='POST')
+        .row
+          .col.s12.l6
+            +input('title',  item.title  || "") Title
+            +input('field1', item.field1 || "") Field 1
+            +input('field2', item.field2 || "") Field 2
+
+        hr
+        +submit Send
+        .right
+          +button2('/item/'+item.id) Back
+          +button2('/item/'+item.id+'/edit') Reset
+

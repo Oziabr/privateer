@@ -1,0 +1,28 @@
+extends ../layout
+
+block content
+  header
+    +navbar-unresponsive('Item List', '/')
+  main
+
+    #index-banner.section.no-pad-bot
+      .container
+        br
+        br
+        .row.center: a.btn-large(class=colorTwo, href='/item/create')
+          | Create
+    .container
+      .section: .row
+        each item in list
+          .col.s12
+            .card
+              .card-content
+                h2= item.title
+                p= item.field1
+                p= item.field2
+              .card-action
+                  +button('/item/'+item.id) Show
+                  +button('/item/'+item.id+'/edit') Edit
+                  +button2('/item/'+item.id+'/delete').right Delete
+
+  +footer
