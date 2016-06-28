@@ -2,14 +2,14 @@ extends ../layout
 
 block content
   header
-    +navbar-unresponsive('Item List', '/')
+    +navbar-unresponsive(title+' List', '/')
   main
 
     #index-banner.section.no-pad-bot
       .container
         br
         br
-        .row.center: a.btn-large(class=colorTwo, href='/item/create')
+        .row.center: a.btn-large(class=colorTwo, href='/#{route}/create')
           | Create
     .container
       .section: .row
@@ -21,8 +21,8 @@ block content
                 p= item.field1
                 p= item.field2
               .card-action
-                  +button('/item/'+item.id) Show
-                  +button('/item/'+item.id+'/edit') Edit
-                  +button2('/item/'+item.id+'/delete').right Delete
+                +button('/'+route+'/'+item.id) Show
+                +button('/'+route+'/'+item.id+'/edit') Edit
+                +button2('/'+route+'/'+item.id+'/delete').right Delete
 
   +footer

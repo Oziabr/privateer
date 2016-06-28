@@ -2,7 +2,7 @@ extends ../layout
 
 block content
   header
-    +navbar-unresponsive('Post', '/')
+    +navbar-unresponsive(title, '/')
   main
     .container
       .section
@@ -13,6 +13,6 @@ block content
             p= item.field2
 
         hr
-        +button('/item') Back
-        +button( '/item/'+item.id+'/edit') Edit
-        +button2('/item/'+item.id+'/delete').right Delete
+        +button('/'+route+'/') Back
+        +button('/'+route+'/'+item.id+'/edit') Edit
+        +button2('/'+route+'/'+item.id+'/delete').right Delete

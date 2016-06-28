@@ -2,7 +2,7 @@ extends ../layout
 
 block content
   header
-    +navbar-unresponsive('Item', '/')
+    +navbar-unresponsive('Edit '+title, '/')
   main
     .container
       .section: form(action='', method='POST')
@@ -15,6 +15,6 @@ block content
         hr
         +submit Send
         .right
-          +button2('/item/'+item.id) Back
-          +button2('/item/'+item.id+'/edit') Reset
+          +button2('/'+route+'/'+item.id) Back
+          +button2('/'+route+'/'+item.id+'/edit') Reset
 

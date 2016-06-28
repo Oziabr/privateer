@@ -2,7 +2,7 @@ extends ../layout
 
 block content
   header
-    +navbar-unresponsive('Item', '/')
+    +navbar-unresponsive('Delete '+title, '/')
   main
     .container: form(action='', method='POST')
       br
@@ -13,6 +13,6 @@ block content
         p= item.field1
         p= item.field2
         hr
-        +button2('/item/'+item.id) Back
-        +button2('/item').right Back To List
+        +button('/'+route+'/'+item.id) Back
+        +button('/'+route+'/').right Back To List
 
