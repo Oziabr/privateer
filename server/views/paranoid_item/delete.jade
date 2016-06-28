@@ -1,0 +1,25 @@
+extends ../layout
+
+block content
+  header
+    +navbar-unresponsive((item.deleted_at?'Restore ':'Delete ')+title, '/')
+  main
+    .container: form(action='', method='POST')
+      br
+
+      .row.center: +submit.btn-large
+        if !item.deleted_at
+          | Delete
+        if item.deleted_at
+          | Restore
+      .section
+        h2
+          if item.deleted_at
+            | (deleted) 
+          | #{item.title}
+        p= item.field1
+        p= item.field2
+        hr
+        +button('/'+route+'/'+item.id) Back
+        +button('/'+route+'/').right Back To List
+

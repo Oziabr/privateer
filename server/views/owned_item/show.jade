@@ -1,0 +1,18 @@
+extends ../layout
+
+block content
+  header
+    +navbar-unresponsive(title, '/')
+  main
+    .container
+      .section
+        .row
+          .col.s12.l8.offset-l2
+            h2= item.title
+            p= item.field1
+            p= item.field2
+            p User: #{item.owner.username}
+        hr
+        +button('/'+route+'/') Back
+        +button('/'+route+'/'+item.id+'/edit') Edit
+        +button2('/'+route+'/'+item.id+'/delete').right Delete

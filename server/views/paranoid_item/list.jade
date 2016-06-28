@@ -1,0 +1,34 @@
+extends ../layout
+
+block content
+  header
+    +navbar-unresponsive(title+' List', '/')
+  main
+
+    #index-banner.section.no-pad-bot
+      .container
+        br
+        br
+        .row.center: a.btn-large(class=colorTwo, href='/#{route}/create')
+          | Create
+    .container
+      .section: .row
+        each item in list
+          .col.s12
+            .card
+              .card-content
+                h2
+                  if item.deleted_at
+                    | (deleted) 
+                  | #{item.title}
+                p= item.field1
+                p= item.field2
+              .card-action
+                +button('/'+route+'/'+item.id) Show
+                +button('/'+route+'/'+item.id+'/edit') Edit
+                if !item.deleted_at
+                  +button2('/'+route+'/'+item.id+'/delete').right Delete
+                if item.deleted_at
+                  +button2('/'+route+'/'+item.id+'/restore').right Restore
+
+  +footer

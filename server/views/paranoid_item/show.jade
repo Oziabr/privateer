@@ -1,0 +1,24 @@
+extends ../layout
+
+block content
+  header
+    +navbar-unresponsive(title, '/')
+  main
+    .container
+      .section
+        .row
+          .col.s12.l8.offset-l2
+            h2
+              if item.deleted_at
+                | (deleted)
+              | #{item.title}
+            p= item.field1
+            p= item.field2
+
+        hr
+        +button('/'+route+'/') Back
+        +button('/'+route+'/'+item.id+'/edit') Edit
+        if !item.deleted_at
+          +button2('/'+route+'/'+item.id+'/delete').right Delete
+        if item.deleted_at
+          +button2('/'+route+'/'+item.id+'/restore').right Restore

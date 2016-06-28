@@ -1,0 +1,16 @@
+extends ../layout
+
+block content
+  header
+    +navbar-unresponsive('New '+title, '/')
+  main
+    .container
+      .section: form(action='', method='POST')
+        .row
+          .col.s12.l6
+            +input('title', "") Title
+            +input('field1',  "") Field 1
+            +input('field2',  "") Field 2
+
+        hr
+        +submit Send
