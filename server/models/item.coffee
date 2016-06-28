@@ -1,7 +1,3 @@
-_ = require 'lodash'
-Promise = require "bluebird"
-fs = Promise.promisifyAll require "fs"
-
 module.exports = (sequelize, dt) ->
   sequelize.define 'item', {
     title:        dt.STRING

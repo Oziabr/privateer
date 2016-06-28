@@ -1,5 +1,4 @@
 _ = require 'lodash'
-fs = require 'fs'
 
 router = (require 'express').Router()
 uploader  = (require __dirname + '/../api/filetype').uploader()
