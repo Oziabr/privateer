@@ -1,6 +1,20 @@
 # privateer
 web-framework with black beard and a pet parrot
 
+## the mission
+
+- hybrid application
+  - classical web interface
+  - modern client-side interface (not just REST endpoints, but consistent full-feature interface)
+- out-of-the-box features
+  - authorization and access control from the box
+  - uploading and managing uploads
+- user-friendly configuration and maintenance interface (as a separate app)
+  - configuration of everything
+  - testing
+  - deploy
+- hackability all the way down to the underlying libraries
+
 ## the rig
 
 - quarterdeck
