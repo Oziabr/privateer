@@ -8,9 +8,7 @@ block content
       .section: form(action='', method='POST')
         .row
           .col.s12.l6
-            +input('title', "") Title
-            +input('field1',  "") Field 1
-            +input('field2',  "") Field 2
+            include _form.jade
 
         hr
         +submit Send

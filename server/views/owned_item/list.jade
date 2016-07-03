@@ -17,10 +17,7 @@ block content
           .col.s12
             .card
               .card-content
-                h2= item.title
-                p= item.field1
-                p= item.field2
-                p User: #{item.owner.username}
+                include _view.jade
               .card-action
                 +button('/'+route+'/'+item.id) Show
                 +button('/'+route+'/'+item.id+'/edit') Edit

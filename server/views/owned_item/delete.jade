@@ -9,9 +9,7 @@ block content
 
       .row.center: +submit.btn-large Delete
       .section
-        h2= item.title
-        p= item.field1
-        p= item.field2
+        include _view.jade
         hr
         +button('/'+route+'/'+item.id) Back
         +button('/'+route+'/').right Back To List

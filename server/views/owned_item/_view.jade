@@ -1,0 +1,6 @@
+h2= item.title
+p= item.field1
+p= item.field2
+p User: #{item.owner.username}
+p Actions #{item.actions?JSON.stringify(item.actions):''}
+p Global actions #{actions?JSON.stringify(actions):''}

@@ -8,10 +8,7 @@ block content
       .section
         .row
           .col.s12.l8.offset-l2
-            h2= item.title
-            p= item.field1
-            p= item.field2
-            p User: #{item.owner.username}
+            include _view.jade
         hr
         +button('/'+route+'/') Back
         +button('/'+route+'/'+item.id+'/edit') Edit
