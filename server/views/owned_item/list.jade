@@ -9,8 +9,9 @@ block content
       .container
         br
         br
-        .row.center: a.btn-large(class=colorTwo, href='/#{route}/create')
-          | Create
+        if actions && actions.c
+          .row.center: a.btn-large(class=colorTwo, href='/#{route}/create')
+            | Create
     .container
       .section: .row
         each item in list
@@ -20,7 +21,9 @@ block content
                 include _view.jade
               .card-action
                 +button('/'+route+'/'+item.id) Show
-                +button('/'+route+'/'+item.id+'/edit') Edit
-                +button2('/'+route+'/'+item.id+'/delete').right Delete
+                if item.actions && item.actions.e
+                  +button('/'+route+'/'+item.id+'/edit') Edit
+                if item.actions && item.actions.d
+                  +button2('/'+route+'/'+item.id+'/delete').right Delete
 
   +footer

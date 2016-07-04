@@ -11,5 +11,7 @@ block content
             include _view.jade
         hr
         +button('/'+route+'/') Back
-        +button('/'+route+'/'+item.id+'/edit') Edit
-        +button2('/'+route+'/'+item.id+'/delete').right Delete
+        if item.actions && item.actions.e
+          +button('/'+route+'/'+item.id+'/edit') Edit
+        if item.actions && item.actions.d
+          +button2('/'+route+'/'+item.id+'/delete').right Delete

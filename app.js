@@ -13,6 +13,11 @@ var db            = require('./server/models/index');
 var app           = express();
 
 app.set('orm', db);
+app.set('errorHandler', function(res) {
+  return function(err) {
+    res.render('error', {error: err})
+  }
+});
 
 //var api           = require('./server/api/index');
 var routes        = require('./server/routes/index');
