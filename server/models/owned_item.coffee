@@ -1,5 +1,17 @@
 _ = require 'lodash'
-module.exports = (sequelize, dt) ->
+
+module.exports =
+  attributes:
+    title: 'STRING'
+  owned: true
+  public: true
+  # include: [[ 'all' ]]
+  # related: [
+  #     item: type: 'm2m', as: 'lulz', of: 'some'
+  #   , item: type: 'o2m', as: 'lapi', of: 'root'
+  # ]
+
+x = (sequelize, dt) ->
   sequelize.define 'owned_item', {
     title:        dt.STRING
     field1:       dt.TEXT
@@ -49,4 +61,3 @@ module.exports = (sequelize, dt) ->
             return throw type: 403, message: 'this action is not permitted' if opt.req.action == 'delete' && !list.actions.d
 
         return
-

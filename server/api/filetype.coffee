@@ -28,7 +28,8 @@ storage = multer.diskStorage
 
 
 module.exports =
-  init: (models, path) ->
+  init: (app, path) ->
+    models = app.get('orm').models
     root_path = path if path
     #console.log 'path', path, y, fs.readdirSync(path.split('/')[0])
     fs.mkdirSync path if !fs.existsSync path
@@ -53,7 +54,6 @@ module.exports =
 
 
   uploader: ->
-
     (model) ->
       (req, res, next) ->
         options = _.filter model.attributes, ['type.key', 'FILE']

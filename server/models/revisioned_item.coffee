@@ -1,5 +1,6 @@
 module.exports =
   attributes:
     title: 'STRING'
-  paranoid: true
+  owned: true
+  revisions: true
   public: true
