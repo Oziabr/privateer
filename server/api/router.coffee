@@ -30,7 +30,8 @@ module.exports = (app) ->
 
   for modelName, model of app.get("orm").models when model.options.routes
     debug "reading routes from model #{model.tableName}"
-    routes[modelName] = (routes[modelName] ?= []).concat model.options.routes
+    model.options.routes.splice 1, 0, (routes[modelName] ?= [])...
+    routes[modelName] = model.options.routes
 
   for routeName, defs of routes
     debug "using #{defs.length} paths for route #{routeName}"
