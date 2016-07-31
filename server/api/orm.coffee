@@ -41,6 +41,7 @@ configureAttrs = (options) ->
 
 mixins = ->
   _.each tables, (opts, name) ->
+    debug "mixing model #{name}"
     if opts.paranoid
       (opts.routes ?= []).push 'get  /:id/restore one:show': (req, res) -> res.render "#{res.locals.route}/delete", item: req.item
       opts.routes.push         'post /:id/restore one:show': (req, res) -> req.item.restore().then (item) -> res.redirect "/#{res.locals.route}/#{item.id}"
@@ -72,11 +73,13 @@ mixins = ->
 
 define = ->
   _.each tables, (options, tableName) ->
+    debug "defining model #{tableName}"
     attributes = configureAttrs(options)
     orm.define tableName, attributes, options
 
 hooks = ->
   _.each orm.models, (model, name) ->
+    debug "hooking model #{name}"
     # defined hooks
     if model.options.hooks_def?.length
       _.each model.options.hooks_def, (hook) ->
@@ -119,6 +122,7 @@ hooks = ->
 relate = ->
   _.each orm.models, (model, name) ->
     return if !(relations = model.options.related)
+    debug "relating model #{name}"
     # console.log 'model', name, relations, model.options.include
     _.each relations, (def) -> _.each def, (relation, table) ->
       return console.log "error relating ro table #{table}" if !(foreign = orm.models[table])
@@ -150,8 +154,10 @@ relate = ->
           return console.log "can't pluralize destination table #{foreign.tableName} alias #{relation.as}" if relation.as == inflection.singularize relation.as
           return console.log "can't pluralize source table #{model.tableName} alias #{relation.of}" if relation.of == inflection.singularize relation.of
           relation.through ?= "#{model.tableName}2#{foreign.tableName}"
-          foreign.belongsToMany model, through: relation.through, as: relation.of, foreignKey: "#{relation.as}_id"
-          model.belongsToMany foreign, through: relation.through, as: relation.as, foreignKey: "#{relation.of}_id"
+          through = orm.define relation.through if !(through = orm.models[relation.through]) && _.isString relation.through
+          foreign.belongsToMany model, through: through, as: relation.of, foreignKey: "#{relation.as}_id"
+          model.belongsToMany foreign, through: through, as: relation.as, foreignKey: "#{relation.of}_id"
+          debug "made relation #{relation.through} with: ", _.omit orm.models[relation.through].options, 'sequelize'
         else console.log "undefined relation type #{relation.type}"
 
 sync = ->
