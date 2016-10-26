@@ -9,9 +9,9 @@ block content
       .row: .col.s12.l8.offset-l2
         .card.darken-3(class=colorOne)
           .card-content.white-text
-            span.card-title Error #{error.type}
-            pre= error.message
+            span.card-title Error #{error.type || 500}
+            pre= error
+            pre= error.stack
           .card-action
             a(href='/') Go back
             a(href='./') Again
-
