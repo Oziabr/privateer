@@ -35,7 +35,7 @@ app.set 'views', './server/views'
 app.set 'view engine', 'jade'
 
 app.use favicon './public/favicon.ico'
-app.use logger 'dev'
+app.use logger 'dev' if process.env.NODE_ENV != 'test'
 app.use express.static './public', maxAge: 86400000
 app.use cookieParser()
 app.use bodyParser.json()
