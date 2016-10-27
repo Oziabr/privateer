@@ -1,6 +1,8 @@
+_             = require 'lodash'
 bcrypt        = require 'bcrypt'
 passport      = require 'passport'
 LocalStrategy = require 'passport-local'
+debug         = require('debug') 'auth'
 
 hashPassword = (user, options, next) ->
   return next 'password too short' if user.password.length < 6
@@ -50,8 +52,10 @@ module.exports =
       .then (user) ->
         #return cb new Error 'user not exists' if !user
         return cb null, false, message: 'user not exists' if !user || !user.password
+        debug 'comparing', password, user.password
         bcrypt.compare password, user.password, (err, result) ->
-          return cb null, false, message: 'password does not match' if err
+          debug 'result', result
+          return cb null, false, message: 'password does not match' if !result || err
           cb null, user
 
 
