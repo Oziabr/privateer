@@ -4,7 +4,7 @@
   "private": false,
   "scripts": {
     "start": "node ./bin/www",
-    "test": "DEBUG=test mocha && istanbul report text-summary lcov"
+    "test": "DEBUG=test NODE_ENV=test mocha && istanbul report text lcov"
   },
   "repository": {
     "type": "git",
@@ -39,6 +39,7 @@
     "coffee-coverage": "^1.0.1",
     "istanbul": "^0.4.5",
     "mocha": "^3.1.2",
+    "request": "^2.76.0",
     "sinon": "^1.17.6"
   }
 }
