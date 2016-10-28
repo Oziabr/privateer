@@ -161,6 +161,7 @@ relate = ->
         else console.log "undefined relation type #{relation.type}"
 
 sync = ->
+  return
   orm.sync force: true
   .then ->
     orm.models.paranoid_item.create
