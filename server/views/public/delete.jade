@@ -1,0 +1,16 @@
+extends ../layout
+
+block content
+  header
+    +navbar-unresponsive('Delete '+title, '/')
+  main
+    .container: form(action='', method='POST')
+      br
+
+      .row.center: +submit.btn-large Delete
+      .section
+        include _view.jade
+        hr
+        +button('/'+route+'/'+item.id) Back
+        +button('/'+route+'/').right Back To List
+

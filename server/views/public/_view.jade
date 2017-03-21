@@ -1,0 +1,10 @@
+- if (!item.owner) item.owner = {}
+.card
+  .card-content
+    h2(class="#{colorTwo}-text")= item.title
+
+  .card-action
+    +button('/'+route+'/'+item.id) Show
+    +button('/'+route+'/'+item.id+'/edit') Edit
+    +button2('/'+route+'/'+item.id+'/delete').right Delete
+

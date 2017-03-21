@@ -1,0 +1,13 @@
+extends ../layout
+
+block content
+  header
+    +navbar-unresponsive(title, '/')
+  main
+    .container
+      .section
+        .row
+          include _view.jade
+
+
+  +footer

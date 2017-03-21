@@ -1,0 +1,14 @@
+extends ../layout
+
+block content
+  header
+    +navbar-unresponsive('New '+title, '/')
+  main
+    .container
+      .section: form(action='', method='POST')
+        .row
+          .col.s12.l6
+            include _form.jade
+
+        hr
+        +submit Send

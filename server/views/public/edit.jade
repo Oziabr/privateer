@@ -1,0 +1,17 @@
+extends ../layout
+
+block content
+  header
+    +navbar-unresponsive('Edit '+title, '/')
+  main
+    .container
+      .section: form(action='', method='POST')
+        .row
+          .col.s12.l6
+            include _form.jade
+
+        hr
+        +submit Send
+        .right
+          +button2('/'+route+'/'+item.id) Back
+          +button2('/'+route+'/'+item.id+'/edit') Reset

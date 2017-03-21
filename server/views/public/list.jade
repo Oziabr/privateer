@@ -1,0 +1,21 @@
+extends ../layout
+
+block content
+  header
+    +navbar-unresponsive(title+' List', '/')
+  main
+
+    #index-banner.section.no-pad-bot
+      .container
+        br
+        br
+        .row.center: a.btn-large(class=colorTwo, href='/#{route}/create')
+          | Create
+    .container
+      .section: .row
+        each item in list
+          .col.l4.m6.s12
+            include _view.jade
+
+
+  +footer

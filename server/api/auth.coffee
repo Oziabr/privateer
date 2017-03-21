@@ -60,9 +60,11 @@ module.exports =
 
 
     passport.serializeUser (user, cb) ->
-      user.getProfile()
+      user.getProfile include: [ model: orm.models.role, as: 'roles', attributes: [ 'title', 'id' ], through: attributes: [] ]
       .then (profile) ->
-        profiles[profile.id] = profile.get plain: true
+        profiles[profile.id] = profile = profile.get plain: true
+        profile.memberOf = profile.roles.map (role) -> role.title
+        debug 'serializing', profile
         cb null, profile.id
 
     passport.deserializeUser (user, cb) ->

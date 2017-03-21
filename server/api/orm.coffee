@@ -7,6 +7,8 @@ debug     = (require 'debug') 'orm'
 
 Router    = require './router'
 filetype  = require './filetype'
+uploader  = (require __dirname + '/../api/filetype').uploader()
+#sync      = require './sync'
 
 Sequelize = require 'sequelize'
 basename  = path.basename module.filename
@@ -18,58 +20,54 @@ orm = new Sequelize config.db.database, config.db.username, config.db.password, 
 
 tables = {}
 
+helpers =
+  oneOf: (modelName, action) -> (req, res, next) ->
+    return next "model doesnt exist" if !(model = orm.models[modelName])
+    req.action = action
+    options = req: req
+    _.defaults options, req["modelScope_#{modelName}"] if req["modelScope_#{modelName}"]
+    model.findById parseInt(req.params.id), options
+    .then (item) ->
+      req.item = item
+      next()
+    .catch (req.app.get 'errorHandler') res
+  listOf: (modelName) -> (req, res, next) ->
+    return next "model doesnt exist" if !(model = orm.models[modelName])
+    options = req: req
+    _.defaults options, req["modelScope_#{modelName}"] if req["modelScope_#{modelName}"]
+    model.findAll options
+    .then (list) ->
+      req.list = list
+      next()
+    .catch (req.app.get 'errorHandler') res
+  uploader: uploader
+
 fs.readdirSync "./server/models"
-  .filter (fileName) ->
-    debug "read model #{fileName}"
-    return false if ! /\.(js|coffee)$/.test fileName
-    return ! console.log "restricted table name #{fileName}" if /^(index|PrimaryKey|Attribute|TableName|Scope|One|Many|Association|Hook)/i.test fileName
-    true
-  .forEach (fileName) ->
-    debug "process model #{fileName}"
-    tables[fileName.split('.')[0]] = (require "./../models/#{fileName}")
+.filter (fileName) -> fileName.match /\.(js|coffee)$/i
+.filter (fileName) -> ! fileName.match /^(index|PrimaryKey|Attribute|TableName|Scope|One|Many|Association|Hook)/i
+.forEach (fileName) ->
+  debug "process model #{fileName}"
+  tables[fileName.split('.')[0]] = (require "./../models/#{fileName}")
 
 configureAttrs = (options) ->
   result = {}
   _.each options.attributes, (type, name) ->
     opts = []
-    if typeof type != 'string'
+    if ! _.isString type
       opts = type.slice 1
       type = type[0]
     return result[name] = orm.Sequelize.STRING() if !orm.Sequelize[type]
-    result[name] = (orm.Sequelize[type])(opts...)
+    result[name] = options.extra[name] if options.extra?[name]
+    (result[name] ?= {}).type = (orm.Sequelize[type])(opts...)
   result
 
-mixins = ->
+mixin_def = require('./orm/mixins') orm, tables, helpers
+
+mixins = (app) ->
   _.each tables, (opts, name) ->
     debug "mixing model #{name}"
-    if opts.paranoid
-      (opts.routes ?= []).push 'get  /:id/restore one:show': (req, res) -> res.render "#{res.locals.route}/delete", item: req.item
-      opts.routes.push         'post /:id/restore one:show': (req, res) -> req.item.restore().then (item) -> res.redirect "/#{res.locals.route}/#{item.id}"
-    if opts.owned && opts.public
-      (opts.related ?= []).push profile: type: 'm2o', as: 'owner'
-      (opts.hooks_def ?= []).push ['beforeCreate', 'setOwner', (data, opt) ->
-        return if !opt.req
-        return throw type: 403, message: 'this action is not permitted' if !opt.req.isAuthenticated()
-        data.owner_id = opt.req.user
-      ]
-      (opts.include ?= []).push ['profile', as: 'owner']
-    if opts.revisions
-      (_rel = {})["#{name}"] = type: 'm2o', as: 'revisioned', of: 'revisions'
-      tables["#{name}_revs"] = related: [ _rel ], attributes: _.cloneDeep opts.attributes
-      #(opts.related ?= {})["#{name}_revs"] = type: 'o2m', as: 'revisions', of: 'revisioned'
-      (opts.hooks_def ?= []).push ['beforeUpdate', 'log', (data, opt) ->
-        data.createRevision _.omit data._previousDataValues, 'id'
-      ]
-    if opts.public
-      opts.routes =  [ 'use': (req, res, next) -> next null, res.locals.route = res.locals.title = if opts.public == true then name else opts.public ].concat (opts.routes ?= [])
-      opts.routes.push 'get  / list':                 (req, res) -> res.render "#{res.locals.route}/list", list: req.list, actions: req.actions
-      opts.routes.push 'get  /create':                (req, res) -> res.render "#{res.locals.route}/create"
-      opts.routes.push 'post /create':                (req, res) -> ((orm.models[name].create req.body, req: req).then (item) -> res.redirect "/#{res.locals.route}/#{item.id}").catch (req.app.get 'errorHandler') res
-      opts.routes.push 'get  /:id        one:show':   (req, res) -> res.render "#{res.locals.route}/show", item: req.item
-      opts.routes.push 'get  /:id/edit   one:edit':   (req, res) -> res.render "#{res.locals.route}/edit", item: req.item
-      opts.routes.push 'post /:id/edit   one:edit':   (req, res) -> ((req.item.update req.body, req: req).then (item) -> res.redirect "/#{res.locals.route}/#{item.id}").catch (req.app.get 'errorHandler') res
-      opts.routes.push 'get  /:id/delete one:delete': (req, res) -> res.render "#{res.locals.route}/delete", item: req.item
-      opts.routes.push 'post /:id/delete one:delete': (req, res) -> ((req.item.destroy req: req).then -> res.redirect "/#{res.locals.route}").catch (req.app.get 'errorHandler') res
+    _.each mixin_def, (fn, def) ->
+      fn(opts, name) if opts[def]
 
 define = ->
   _.each tables, (options, tableName) ->
@@ -88,7 +86,6 @@ hooks = ->
         model[hookType] hookName, fn
     # defaultScope includes
     if model.options.include?.length
-      'some'
       # model.addScope 'defaultScope', (include: [model: orm.models.profile, as: 'owner']), override: true
       model.addScope 'defaultScope', (include: _.compact _.map model.options.include, (include) ->
         [table, opt] = include
@@ -98,25 +95,28 @@ hooks = ->
         false
       ), override: true
 
-    model.afterFind 'getActions', (list, opt) ->
-      return if !opt.req
+    if model.options.owned
+      model.afterFind 'getActions', (list, opt) ->
+        return if !opt.req
 
-      if _.isArray list
-        opt.req.actions ?= {}
-        opt.req.actions.c = 1 if opt.req.isAuthenticated()
-        _.map list, (item) ->
-          item.actions ?= {}
-          item.actions.e = 1 if item.owner_id == opt.req.user
-          item.actions.d = 1 if item.owner_id == opt.req.user
-        return 0
+        if _.isArray list
+          opt.req.actions ?= {}
+          opt.req.actions.c = 1 if opt.req.isAuthenticated()
+          _.map list, (item) ->
+            # debug item.owner_id == opt.req.user, item.owner_id, opt.req.user
+            actions = {}
+            item.setDataValue 'actions', actions
+            actions.e = 1 if item.owner_id == opt.req.user
+            actions.d = 1 if item.owner_id == opt.req.user
+          return 0
 
-      else
-        return throw type: 404, message: 'no such record' if !list
-        list.actions ?= {}
-        list.actions.e = 1 if list.owner_id == opt.req.user
-        list.actions.d = 1 if list.owner_id == opt.req.user
-        return throw type: 403, message: 'this action is not permitted' if opt.req.action == 'edit' && !list.actions.e
-        return throw type: 403, message: 'this action is not permitted' if opt.req.action == 'delete' && !list.actions.d
+        else
+          return throw type: 404, message: 'no such record' if !list
+          list.setDataValue 'actions', (actions = {})
+          actions.e = 1 if list.owner_id == opt.req.user
+          actions.d = 1 if list.owner_id == opt.req.user
+          return throw type: 403, message: 'this action is not permitted' if opt.req.action == 'edit' && !actions.e
+          return throw type: 403, message: 'this action is not permitted' if opt.req.action == 'delete' && !actions.d
 
 
 relate = ->
@@ -157,7 +157,7 @@ relate = ->
           through = orm.define relation.through if !(through = orm.models[relation.through]) && _.isString relation.through
           foreign.belongsToMany model, through: through, as: relation.of, foreignKey: "#{relation.as}_id"
           model.belongsToMany foreign, through: through, as: relation.as, foreignKey: "#{relation.of}_id"
-          debug "made relation #{relation.through} with: ", _.omit orm.models[relation.through].options, 'sequelize'
+          debug "made m2m relation #{relation.through} for #{model.tableName} and #{foreign.tableName} as #{relation.as} of #{relation.of}"
         else console.log "undefined relation type #{relation.type}"
 
 sync = ->
@@ -197,12 +197,25 @@ sync = ->
             # console.log "> revisioned_item has key #{key}" for key of revisioned_item when key.match /^(create|remove)/
             # console.log "> revisioned_item_rev has key #{key}" for key of rev[0] when key.match /^(create|remove)/
 
+scoping = ->
+  _.each orm.models, (model, name) ->
+    return if !(scopes = model.options.scope_def)
+    debug "scoping model #{name}", model.options.scopes
+    model.addScope 'noscope', deleted: true
+    _.each scopes, (scope) ->
+      # debug "!!!!!!!!!!!!!!!!!!!!! scope is ", scope, model.options.defaultScope, model.options.scope
+      # debug "scope is ", key for key of model.options when key.match /scope/i  #'defaultScope'
+      model.addScope scope...
+      debug "!!!!!!!!!!!!!!!!!!!!! scope is ", scope, model.options.defaultScope, model.options.scope
+
 module.exports =
   process: (app) ->
-    do mixins
+    mixins app
     do define
     do hooks
     do relate
-    do sync
+    do scoping
+    sync orm
   init: (app) ->
+    app.set 'helpers', helpers
     app.set 'orm', orm

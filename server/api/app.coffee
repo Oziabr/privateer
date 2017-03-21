@@ -18,6 +18,10 @@ filetype      = require './filetype'
 module.exports = app = express()
 
 # helpers
+express.request.getModel = (name) ->
+  return false if !(model = app.get('orm').models[name])
+  return model
+
 app.set 'errorHandler', (res) -> (err) ->
   console.log 'err', _.keys err
   res.render 'error', error: err
