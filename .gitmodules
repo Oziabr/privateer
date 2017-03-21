@@ -1,0 +1,3 @@
+[submodule "server/views/mixins"]
+	path = server/views/mixins
+	url = git@github.com:Oziabr/privateer-mixins.git
