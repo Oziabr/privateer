@@ -93,6 +93,17 @@ describe 'basic auth', ->
       expect(body).to.match /Log In<\/a>/
       done()
 
+  it 'should get register form', (done) ->
+    request (path 'auth/register'), (err, response, body) ->
+      expect(response.request.uri.path).to.equal '/auth/register'
+      done()
+
+  it 'should register', (done) ->
+    request.post (path 'auth/register'), (jar: cookie, form: email: 'tmp@admin.tld', password: 'temporary'),
+    (err, response, body) ->
+      expect(body).to.equal 'Found. Redirecting to /profile'
+      done()
+
 describe 'resources', ->
 
   describe 'public', ->
