@@ -1,4 +1,0 @@
-mixin marked(value, title)
-  - if(title) value = "# "+title+"\n\n"+value;
-  link(rel="stylesheet", href="/github-markdown.css")
-  article.markdown-body!= md(value)
