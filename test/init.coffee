@@ -11,9 +11,18 @@ path    = (link) -> "http://localhost:#{port}/#{link}"
 server  = false
 cookie  = request.jar()
 
+image = -> fs.createReadStream('./test/assets/image.png')
 rm './public/img/picture/'
+rm './public/img/userpic/'
+fs.mkdirSync './public/img/userpic/'
+fs.createReadStream('./test/assets/userpic').pipe(fs.createWriteStream('public/img/userpic/01QqB6dqdAXkqc0WhS6glD'))
 
 app     = require '../server/api/app'
+
+after (done) ->
+  rm './public/img/picture/'
+  rm './public/img/userpic/'
+  done()
 
 describe 'server init', ->
 
@@ -128,19 +137,19 @@ describe 'basic auth', ->
 describe 'uploader & userpic', ->
 
   it 'should upload userpic', (done) ->
-    request.post (url: (path 'profile'), jar: cookie, formData: userpic: fs.createReadStream('./test/image.png')),
+    request.post (url: (path 'profile'), jar: cookie, formData: userpic: image()),
     (err, response, body) ->
       expect(body).to.equal 'Found. Redirecting to /profile'
       done()
 
   it 'should upload item picture', (done) ->
-    request.post (url: (path 'item/create'), formData: title: 1, picture: fs.createReadStream('./test/image.png')),
+    request.post (url: (path 'item/create'), formData: title: 1, picture: image()),
     (err, response, body) ->
       expect(body).to.equal 'Found. Redirecting to /item/1'
       done()
 
   it 'should upload new item picture', (done) ->
-    request.post (url: (path 'item/1/edit'), formData: picture: fs.createReadStream('./test/image.png')),
+    request.post (url: (path 'item/1/edit'), formData: picture: image()),
     (err, response, body) ->
       expect(body).to.equal 'Found. Redirecting to /item/1'
       done()
@@ -150,7 +159,7 @@ describe 'uploader & userpic', ->
     fs.mkdirSync './public/img/picture/'
 
   it 'should upload new item picture when old is gone', (done) ->
-    request.post (url: (path 'item/1/edit'), formData: picture: fs.createReadStream('./test/image.png')),
+    request.post (url: (path 'item/1/edit'), formData: picture: image()),
     (err, response, body) ->
       expect(body).to.equal 'Found. Redirecting to /item/1'
       done()
