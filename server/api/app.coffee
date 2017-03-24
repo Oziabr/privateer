@@ -23,16 +23,17 @@ express.request.getModel = (name) ->
   return model
 
 app.set 'errorHandler', (res) -> (err) ->
-  console.log 'err', _.keys err
+  # console.log 'err', _.keys err
   res.render 'error', error: err
 
 orm.init app
 
 passport = auth.init app
-filetype.init app, 'public/img'
 session = exSession secret: '78UScJ80zW7XAfxwvHzsg9KpOY', resave: false, saveUninitialized: false
 
 orm.process app
+
+filetype.init app, 'public/img'
 
 # view engine setup
 app.set 'views', './server/views'

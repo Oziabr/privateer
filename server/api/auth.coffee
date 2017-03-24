@@ -22,11 +22,12 @@ module.exports =
     orm = app.get 'orm'
 
     app.set 'profiles', profiles = {}
-    app.use (req, res, next) ->
-      return next() if req.user == undefined
-      profiles = req.app.get 'profiles'
-      res.locals.user = profiles[req.user]
-      next()
+    # app.use (req, res, next) ->
+    #   console.log 'user', req.user
+    #   return next() if req.user == undefined
+    #   profiles = req.app.get 'profiles'
+    #   res.locals.user = profiles[req.user]
+    #   next()
 
     orm.define 'profile',
       username: orm.Sequelize.STRING,
@@ -68,7 +69,6 @@ module.exports =
         cb null, profile.id
 
     passport.deserializeUser (user, cb) ->
-      #console.log 'des', user, profiles
       return cb null, user
 
     return passport

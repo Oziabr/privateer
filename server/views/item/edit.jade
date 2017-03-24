@@ -5,16 +5,14 @@ block content
     +navbar-unresponsive('Edit '+title, '/')
   main
     .container
-      .section: form(action='', method='POST')
+      .section: form(action='', method='POST', enctype="multipart/form-data")
         .row
           .col.s12.l6
             +input('title',  item.title  || "") Title
-            +input('field1', item.field1 || "") Field 1
-            +input('field2', item.field2 || "") Field 2
+            +file('picture', item.picture) Cover
 
         hr
         +submit Send
         .right
           +button2('/'+route+'/'+item.id) Back
           +button2('/'+route+'/'+item.id+'/edit') Reset
-

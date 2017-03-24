@@ -34,7 +34,6 @@ module.exports = (orm, tables, helpers) ->
     ]
 
   public: (opts, name) ->
-    opts.routes = opts.routes || []
     opts.routes =  [ 'use': [ (req, res, next) -> (res.locals.route = res.locals.title = if opts.public == true then name else opts.public); next null ] ].concat (opts.routes ?= [])
     opts.routes.push 'get  /':            [ helpers.listOf(name),          (req, res) -> res.render "#{res.locals.route}/list", list: (req.list.map (item) -> item.get plain: true), actions: req.actions ]
     opts.routes.push 'get  /create':      [                                           (req, res) -> res.render "#{res.locals.route}/create" ]

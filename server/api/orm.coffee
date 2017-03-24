@@ -7,7 +7,6 @@ debug     = (require 'debug') 'orm'
 
 Router    = require './router'
 filetype  = require './filetype'
-uploader  = (require __dirname + '/../api/filetype').uploader()
 #sync      = require './sync'
 
 Sequelize = require 'sequelize'
@@ -40,7 +39,6 @@ helpers =
       req.list = list
       next()
     .catch (req.app.get 'errorHandler') res
-  uploader: uploader
 
 fs.readdirSync "./server/models"
 .filter (fileName) -> fileName.match /\.(js|coffee)$/i

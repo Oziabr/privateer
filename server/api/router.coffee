@@ -17,7 +17,7 @@ module.exports = (app) ->
 
   for modelName, model of orm.models when model.options.routes
     debug "reading routes from model #{model.tableName}"
-    routeName =  if model.options.public == true then modelName else model.options.public
+    routeName =  if model.options.public == true || !model.options.public then modelName else model.options.public
     model.options.routes.splice 1, 0, (routes[modelName] ?= [])...
     routes[routeName] = model.options.routes
 

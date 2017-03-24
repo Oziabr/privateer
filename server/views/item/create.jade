@@ -5,12 +5,11 @@ block content
     +navbar-unresponsive('New '+title, '/')
   main
     .container
-      .section: form(action='', method='POST')
+      .section: form(action='', method='POST', enctype="multipart/form-data")
         .row
           .col.s12.l6
             +input('title', "") Title
-            +input('field1',  "") Field 1
-            +input('field2',  "") Field 2
+            +file('picture', '') Cover
 
         hr
         +submit Send

@@ -1,20 +1,23 @@
 Promise = require 'bluebird'
 request = require 'request'
+fs      = require 'fs'
+rm      = require('rimraf').sync
 http    = require 'http'
 expect  = require('chai').expect
 debug   = require('debug') 'test'
-
-app     = require '../server/api/app'
 
 port    = 9031
 path    = (link) -> "http://localhost:#{port}/#{link}"
 server  = false
 cookie  = request.jar()
 
+rm './public/img/picture/'
+
+app     = require '../server/api/app'
+
 describe 'server init', ->
 
   before (done) ->
-
     app.set 'port', port
     server = http.createServer app
 
@@ -66,6 +69,18 @@ describe 'basic auth', ->
       done()
 
   it 'should not login', (done) ->
+    request.post (path 'auth/login'), (form: username: 'admin@admin.tld', password: ''),
+    (err, response, body) ->
+      expect(body).to.equal 'Found. Redirecting to /auth/login'
+      done()
+
+  it 'should not login', (done) ->
+    request.post (path 'auth/login'), (form: username: 'nimda@admin.tld', password: 'bullshit'),
+    (err, response, body) ->
+      expect(body).to.equal 'Found. Redirecting to /auth/login'
+      done()
+
+  it 'should not login', (done) ->
     request.post (path 'auth/login'), (form: username: 'admin@admin.tld', password: 'bullshit'),
     (err, response, body) ->
       expect(body).to.equal 'Found. Redirecting to /auth/login'
@@ -98,10 +113,46 @@ describe 'basic auth', ->
       expect(response.request.uri.path).to.equal '/auth/register'
       done()
 
+  it 'should not register', (done) ->
+    request.post (path 'auth/register'), (jar: cookie, form: email: 'tmp@admin.tld', password: ''),
+    (err, response, body) ->
+      expect(body).to.match /password too short/
+      done()
+
   it 'should register', (done) ->
     request.post (path 'auth/register'), (jar: cookie, form: email: 'tmp@admin.tld', password: 'temporary'),
     (err, response, body) ->
       expect(body).to.equal 'Found. Redirecting to /profile'
+      done()
+
+describe 'uploader & userpic', ->
+
+  it 'should upload userpic', (done) ->
+    request.post (url: (path 'profile'), jar: cookie, formData: userpic: fs.createReadStream('./test/image.png')),
+    (err, response, body) ->
+      expect(body).to.equal 'Found. Redirecting to /profile'
+      done()
+
+  it 'should upload item picture', (done) ->
+    request.post (url: (path 'item/create'), formData: title: 1, picture: fs.createReadStream('./test/image.png')),
+    (err, response, body) ->
+      expect(body).to.equal 'Found. Redirecting to /item/1'
+      done()
+
+  it 'should upload new item picture', (done) ->
+    request.post (url: (path 'item/1/edit'), formData: picture: fs.createReadStream('./test/image.png')),
+    (err, response, body) ->
+      expect(body).to.equal 'Found. Redirecting to /item/1'
+      done()
+
+  it '% removing picture', ->
+    rm './public/img/picture/'
+    fs.mkdirSync './public/img/picture/'
+
+  it 'should upload new item picture when old is gone', (done) ->
+    request.post (url: (path 'item/1/edit'), formData: picture: fs.createReadStream('./test/image.png')),
+    (err, response, body) ->
+      expect(body).to.equal 'Found. Redirecting to /item/1'
       done()
 
 describe 'resources', ->
@@ -151,7 +202,6 @@ describe 'resources', ->
 
     it 'should edit', (done) ->
       request.post (path "public/#{item}/edit"), (form: title: 'edited item'), (err, response, body) ->
-        console.log body
         app.get('orm').models.public_item.findById item
         .then (item) ->
           expect((item.get plain: true).title).to.equal 'edited item'
@@ -176,23 +226,23 @@ describe 'resources', ->
         expect(body).to.match /<a[^>]*href="\/paranoid_item\/create"/
         done()
 
-    it 'should get only vivsible one', (done) ->
-      request (path 'paranoid_item'), (err, response, body) ->
-        console.log body.match /<h2>[^<]+/g
-        done()
+    # it 'should get only vivsible one', (done) ->
+    #   request (path 'paranoid_item'), (err, response, body) ->
+    #     console.log body.match /<h2>[^<]+/g
+    #     done()
+    #
+    # it 'should reverse', (done) ->
+    #   request.post (path "paranoid_item/#{visible}/delete"), (err, response, body) ->
+    #     console.log body
+    #     request.post (path "paranoid_item/#{notVisible}/restore"), (err, response, body) ->
+    #       console.log body
+    #       request (path 'paranoid_item'), (err, response, body) ->
+    #         console.log body.match /<h2>[^<]+/g
+    #         done()
 
-    it 'should reverse', (done) ->
-      request.post (path "paranoid_item/#{visible}/delete"), (err, response, body) ->
-        console.log body
-        request.post (path "paranoid_item/#{notVisible}/restore"), (err, response, body) ->
-          console.log body
-          request (path 'paranoid_item'), (err, response, body) ->
-            console.log body.match /<h2>[^<]+/g
-            done()
+describe 'shut down server', ->
+  before (done) ->
+    server.close -> done()
 
-  describe 'shut down server', ->
-    before (done) ->
-      server.close -> done()
-
-    it 'should be off', ->
-      expect(server.address()).to.equal null
+  it 'should be off', ->
+    expect(server.address()).to.equal null
